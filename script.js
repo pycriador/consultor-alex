@@ -287,6 +287,50 @@ if (carousel) {
   });
 }
 
+/* ===== PLANOS TABS ===== */
+const planosTabs = document.querySelectorAll('.planos-tab');
+const planosPanels = document.querySelectorAll('.planos-panel');
+
+function selectPlano(tabId) {
+  planosTabs.forEach(tab => {
+    const isActive = tab.id === tabId;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    tab.setAttribute('tabindex', isActive ? '0' : '-1');
+  });
+  planosPanels.forEach(panel => {
+    const isActive = panel.id === 'panel-' + tabId.replace('tab-', '');
+    if (isActive) {
+      panel.hidden = false;
+      panel.classList.add('active');
+      panel.setAttribute('aria-hidden', 'false');
+    } else {
+      panel.hidden = true;
+      panel.classList.remove('active');
+      panel.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
+if (planosTabs.length) {
+  planosTabs.forEach(tab => {
+    tab.addEventListener('click', () => selectPlano(tab.id));
+    tab.addEventListener('keydown', (e) => {
+      const index = Array.prototype.indexOf.call(planosTabs, tab);
+      let next = null;
+      if (e.key === 'ArrowRight') next = planosTabs[(index + 1) % planosTabs.length];
+      else if (e.key === 'ArrowLeft') next = planosTabs[(index - 1 + planosTabs.length) % planosTabs.length];
+      else if (e.key === 'Home') next = planosTabs[0];
+      else if (e.key === 'End') next = planosTabs[planosTabs.length - 1];
+      if (next) {
+        e.preventDefault();
+        selectPlano(next.id);
+        next.focus();
+      }
+    });
+  });
+}
+
 /* ===== LIGHTBOX ===== */
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
