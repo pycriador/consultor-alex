@@ -178,18 +178,41 @@ window.addEventListener('scroll', updateActiveLink, { passive: true });
 window.addEventListener('load', updateActiveLink);
 
 /* ===== SCROLL REVEAL ===== */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      revealObserver.unobserve(entry.target);
+const revealObserver = typeof IntersectionObserver !== 'undefined'
+  ? new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          revealNow(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' })
+  : null;
+
+function revealNow(el) {
+  el.classList.add('visible');
+  if (revealObserver) revealObserver.unobserve(el);
+}
+
+function revealInView() {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 40 && rect.bottom > 0) {
+      revealNow(el);
     }
   });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}
 
-document.querySelectorAll('.reveal').forEach(el => {
-  revealObserver.observe(el);
+if (revealObserver) {
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+}
+
+window.addEventListener('load', () => {
+  revealInView();
+  setTimeout(revealInView, 1200);
 });
+window.addEventListener('scroll', revealInView, { passive: true });
+window.addEventListener('resize', revealInView, { passive: true });
+revealInView();
 
 /* ===== SERVICE CAROUSEL ===== */
 const track = document.querySelector('.carousel-track');
