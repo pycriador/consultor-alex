@@ -410,12 +410,18 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ===== FORM VALIDATION ===== */
+/* ===== FORM VALIDATION & SUBMIT ===== */
 const form = document.getElementById('contactForm');
 const successMsg = document.getElementById('formSuccess');
+const formError = document.getElementById('formError');
+const submitBtn = document.getElementById('submitBtn');
+const decorridoField = document.getElementById('formDecorrido');
+const formLoadTime = Date.now();
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
+  formError.classList.remove('show');
+  formError.textContent = '';
   let valid = true;
 
   const fields = [
@@ -451,16 +457,38 @@ form.addEventListener('submit', (e) => {
     return;
   }
 
-  form.style.display = 'none';
-  successMsg.classList.add('show');
-  successMsg.focus();
+  decorridoField.value = String(Date.now() - formLoadTime);
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Enviando...';
 
-  setTimeout(() => {
-    form.reset();
-    form.style.display = 'block';
-    successMsg.classList.remove('show');
-    successMsg.innerHTML = 'Mensagem enviada com sucesso! Entraremos em contato em breve.';
-  }, 4000);
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    const data = await res.json().catch(() => null);
+
+    if (res.ok && data && data.ok) {
+      form.style.display = 'none';
+      successMsg.classList.add('show');
+      successMsg.focus();
+      setTimeout(() => {
+        form.reset();
+        form.style.display = 'block';
+        successMsg.classList.remove('show');
+        successMsg.innerHTML = 'Mensagem enviada com sucesso! Entraremos em contato em breve.';
+      }, 4000);
+    } else {
+      throw new Error((data && data.message) || 'Não foi possível enviar sua mensagem.');
+    }
+  } catch (err) {
+    formError.textContent = err.message || 'Não foi possível enviar sua mensagem. Tente novamente.';
+    formError.classList.add('show');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Enviar Mensagem';
+  }
 });
 
 /* ===== COUNTER ANIMATION ===== */

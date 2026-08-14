@@ -1329,6 +1329,27 @@ h3 { font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 600; }
   transition: background var(--transition);
 }
 .submit-btn:hover, .submit-btn:focus-visible { background: var(--blue-dark); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.form-error {
+  display: none;
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius);
+  color: #B91C1C;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.form-error.show { display: block; }
 .form-success {
   display: none;
   padding: 20px;

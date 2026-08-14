@@ -8,6 +8,8 @@
   <meta name="keywords" content="suporte técnico, TI corporativa, manutenção de computadores, suporte mensal, segurança digital, locação de equipamentos, telefonia IP, CFTV, São Paulo">
   <meta name="author" content="ALX TEC SMART TI">
   <meta name="robots" content="index, follow">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="canonical" href="https://alxtecsmartti.com.br/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="ALX TEC SMART TI — Suporte Técnico Corporativo">
@@ -842,32 +844,38 @@
             </div>
           </div>
           <div class="reveal">
-            <form id="contactForm" novalidate aria-label="Formulário de contato">
+            <form id="contactForm" action="enviar.php" method="post" novalidate aria-label="Formulário de contato">
               <div class="form-group">
-                <input type="text" id="nome" placeholder="Seu nome" required aria-required="true">
+                <input type="text" id="nome" name="nome" placeholder="Seu nome" required aria-required="true" autocomplete="name">
                 <label for="nome">Nome *</label>
                 <span class="error" role="alert" id="nome-error">Campo obrigatório</span>
               </div>
               <div class="form-group">
-                <input type="email" id="email" placeholder="seu@email.com" required aria-required="true">
+                <input type="email" id="email" name="email" placeholder="seu@email.com" required aria-required="true" autocomplete="email">
                 <label for="email">E-mail *</label>
                 <span class="error" role="alert" id="email-error">Informe um e-mail válido</span>
               </div>
               <div class="form-group">
-                <input type="tel" id="telefone" placeholder="(11) 99999-9999" aria-label="Telefone para contato">
+                <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" aria-label="Telefone para contato" autocomplete="tel">
                 <label for="telefone">Telefone</label>
               </div>
               <div class="form-group">
-                <input type="text" id="empresa" placeholder="Sua empresa" aria-label="Nome da empresa">
+                <input type="text" id="empresa" name="empresa" placeholder="Sua empresa" aria-label="Nome da empresa" autocomplete="organization">
                 <label for="empresa">Empresa</label>
               </div>
               <div class="form-group">
-                <textarea id="mensagem" placeholder="Sua mensagem" required aria-required="true"></textarea>
+                <textarea id="mensagem" name="mensagem" placeholder="Sua mensagem" required aria-required="true"></textarea>
                 <label for="mensagem">Mensagem *</label>
                 <span class="error" role="alert" id="mensagem-error">Campo obrigatório</span>
               </div>
-              <button type="submit" class="submit-btn">Enviar Mensagem</button>
+              <div class="hp-field" aria-hidden="true">
+                <label for="website">Não preencha este campo</label>
+                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+              </div>
+              <input type="hidden" name="decorrido" id="formDecorrido" value="0">
+              <button type="submit" class="submit-btn" id="submitBtn">Enviar Mensagem</button>
             </form>
+            <div class="form-error" id="formError" role="alert" aria-live="polite"></div>
             <div class="form-success" id="formSuccess" role="status" aria-live="polite">
               Mensagem enviada com sucesso! Entraremos em contato em breve.
             </div>
