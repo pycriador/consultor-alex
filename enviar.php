@@ -2,10 +2,19 @@
 
 declare(strict_types=1);
 
-/* ===== Configuração ===== */
+require_once __DIR__ . '/vendor/SmtpMailer.php';
+
+/* ===== Configuração do e-mail ===== */
 const CONTATO_DESTINO = 'alxteconsultoria@gmail.com';
 const CONTATO_REMETENTE_NOME = 'Site ALX TEC SMART TI';
 const CONTATO_REMETENTE_EMAIL = 'no-reply@seu-dominio.com.br';
+
+/* ===== Configuração SMTP ===== */
+const SMTP_HOST = 'mail.seu-dominio.com.br';
+const SMTP_PORT = 587;
+const SMTP_USER = 'contato@seu-dominio.com.br';
+const SMTP_PASS = 'SUA_SENHA_AQUI';
+const SMTP_CRYPTO = 'tls';
 const TEMPO_MINIMO_MS = 3000;
 const LIMITE_ENVIOS = 5;
 const JANELA_LIMITE_SEG = 3600;
@@ -109,21 +118,20 @@ $linhas[] = $mensagem;
 $corpo = implode("\n", $linhas);
 
 $assunto = 'Contato pelo site - ' . $nome;
-if (function_exists('mb_encode_mimeheader')) {
-    $assunto = mb_encode_mimeheader($assunto, 'UTF-8');
-}
 
-$headers = implode("\r\n", [
-    'From: ' . CONTATO_REMETENTE_NOME . ' <' . CONTATO_REMETENTE_EMAIL . '>',
-    'Reply-To: ' . $email,
-    'X-Mailer: PHP/' . phpversion(),
-    'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=UTF-8',
-]);
-
-$enviado = @mail(CONTATO_DESTINO, $assunto, $corpo, $headers);
-
-if ($enviado) {
+try {
+    $mailer = new SmtpMailer(SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_CRYPTO);
+    $mailer->send(
+        CONTATO_REMETENTE_EMAIL,
+        CONTATO_DESTINO,
+        $assunto,
+        $corpo,
+        CONTATO_REMETENTE_NOME,
+        $email,
+        $nome
+    );
     responder(true, 'Mensagem enviada com sucesso! Entraremos em contato em breve.');
+} catch (RuntimeException $e) {
+    error_log('SmtpMailer Error: ' . $e->getMessage());
+    responder(false, 'Não foi possível enviar sua mensagem agora. Tente novamente em instantes.', 500);
 }
-responder(false, 'Não foi possível enviar sua mensagem agora. Tente novamente em instantes.', 500);
