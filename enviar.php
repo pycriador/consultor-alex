@@ -19,7 +19,7 @@ const TEMPO_MINIMO_MS = 3000;
 const LIMITE_ENVIOS = 5;
 const JANELA_LIMITE_SEG = 3600;
 
-function responder(bool $ok, string $msg, int $status = 200): void
+function responder(bool $ok, string $msg, int $status = 200)
 {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');

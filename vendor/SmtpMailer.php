@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 class SmtpMailer
 {
-    private string $host;
-    private int $port;
-    private string $user;
-    private string $pass;
-    private string $crypto;
-    private string $ehloHost;
+    private $host;
+    private $port;
+    private $user;
+    private $pass;
+    private $crypto;
+    private $ehloHost;
     private $stream = null;
 
     public function __construct(
@@ -36,7 +36,7 @@ class SmtpMailer
         string $fromName = '',
         string $replyToEmail = '',
         string $replyToName = ''
-    ): void {
+    ) {
         try {
             $this->connect();
             $this->ehlo();
@@ -54,7 +54,7 @@ class SmtpMailer
         }
     }
 
-    private function connect(): void
+    private function connect():
     {
         $target = $this->crypto === 'ssl'
             ? 'ssl://' . $this->host . ':' . $this->port
@@ -70,13 +70,13 @@ class SmtpMailer
         $this->expect(220);
     }
 
-    private function ehlo(): void
+    private function ehlo():
     {
         $this->write('EHLO ' . $this->ehloHost);
         $this->expect(250);
     }
 
-    private function startTls(): void
+    private function startTls():
     {
         $this->write('STARTTLS');
         $this->expect(220);
@@ -86,7 +86,7 @@ class SmtpMailer
         }
     }
 
-    private function auth(): void
+    private function auth():
     {
         $this->write('AUTH LOGIN');
         $this->expect(334);
@@ -96,13 +96,13 @@ class SmtpMailer
         $this->expect(235);
     }
 
-    private function mailFrom(string $email): void
+    private function mailFrom(string $email):
     {
         $this->write('MAIL FROM:<' . $email . '>');
         $this->expect(250);
     }
 
-    private function rcptTo(string $email): void
+    private function rcptTo(string $email):
     {
         $this->write('RCPT TO:<' . $email . '>');
         $this->expect(250);
@@ -116,7 +116,7 @@ class SmtpMailer
         string $fromName,
         string $replyToEmail,
         string $replyToName
-    ): void {
+    ) {
         $this->write('DATA');
         $this->expect(354);
 
@@ -147,7 +147,7 @@ class SmtpMailer
         $this->expect(250);
     }
 
-    private function quit(): void
+    private function quit():
     {
         try {
             $this->write('QUIT');
@@ -157,7 +157,7 @@ class SmtpMailer
         }
     }
 
-    private function disconnect(): void
+    private function disconnect():
     {
         if (is_resource($this->stream)) {
             fclose($this->stream);
@@ -165,7 +165,7 @@ class SmtpMailer
         $this->stream = null;
     }
 
-    private function write(string $data): void
+    private function write(string $data):
     {
         $len = strlen($data);
         $written = 0;
@@ -178,7 +178,7 @@ class SmtpMailer
         }
     }
 
-    private function expect(int $code): void
+    private function expect(int $code):
     {
         $line = @fgets($this->stream, 4096);
         if ($line === false) {
