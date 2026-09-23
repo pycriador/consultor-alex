@@ -413,7 +413,7 @@ document.addEventListener('keydown', (e) => {
 /* ===== FORM VALIDATION & WHATSAPP SUBMIT ===== */
 const form = document.getElementById('contactForm');
 const successMsg = document.getElementById('formSuccess');
-const WHATSAPP_NUMBER = '5511959143135';
+const WHATSAPP_NUMBER = '5511913547565';
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
