@@ -410,18 +410,13 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ===== FORM VALIDATION & SUBMIT ===== */
+/* ===== FORM VALIDATION & WHATSAPP SUBMIT ===== */
 const form = document.getElementById('contactForm');
 const successMsg = document.getElementById('formSuccess');
-const formError = document.getElementById('formError');
-const submitBtn = document.getElementById('submitBtn');
-const decorridoField = document.getElementById('formDecorrido');
-const formLoadTime = Date.now();
+const WHATSAPP_NUMBER = '5511959143135';
 
-form.addEventListener('submit', async (e) => {
+form.addEventListener('submit', (e) => {
   e.preventDefault();
-  formError.classList.remove('show');
-  formError.textContent = '';
   let valid = true;
 
   const fields = [
@@ -457,38 +452,34 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  decorridoField.value = String(Date.now() - formLoadTime);
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Enviando...';
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+  const empresa = document.getElementById('empresa').value.trim();
+  const mensagem = document.getElementById('mensagem').value.trim();
 
-  try {
-    const res = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
-    });
-    const data = await res.json().catch(() => null);
+  const linhas = [
+    'Olá, Alex! Vim pelo site ALX TEC SMART TI.',
+    '',
+    '*Nome:* ' + nome,
+    '*E-mail:* ' + email
+  ];
+  if (telefone) linhas.push('*Telefone:* ' + telefone);
+  if (empresa) linhas.push('*Empresa:* ' + empresa);
+  linhas.push('', '*Mensagem:*', mensagem);
 
-    if (res.ok && data && data.ok) {
-      form.style.display = 'none';
-      successMsg.classList.add('show');
-      successMsg.focus();
-      setTimeout(() => {
-        form.reset();
-        form.style.display = 'block';
-        successMsg.classList.remove('show');
-        successMsg.innerHTML = 'Mensagem enviada com sucesso! Entraremos em contato em breve.';
-      }, 4000);
-    } else {
-      throw new Error((data && data.message) || 'Não foi possível enviar sua mensagem.');
-    }
-  } catch (err) {
-    formError.textContent = err.message || 'Não foi possível enviar sua mensagem. Tente novamente.';
-    formError.classList.add('show');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Enviar Mensagem';
-  }
+  const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(linhas.join('\n'));
+  window.open(url, '_blank', 'noopener,noreferrer');
+
+  form.style.display = 'none';
+  successMsg.classList.add('show');
+  successMsg.focus();
+
+  setTimeout(() => {
+    form.reset();
+    form.style.display = 'block';
+    successMsg.classList.remove('show');
+  }, 4000);
 });
 
 /* ===== COUNTER ANIMATION ===== */

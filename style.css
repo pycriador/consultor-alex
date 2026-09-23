@@ -826,7 +826,28 @@ h3 { font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 600; }
   padding-bottom: 24px;
   margin-bottom: 28px;
   border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
 }
+.plano-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #25D366;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 13px 22px;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 20px rgba(18,140,126,0.28);
+  transition: background var(--transition), transform var(--transition);
+}
+.plano-wa-btn svg { width: 18px; height: 18px; fill: #fff; flex-shrink: 0; }
+.plano-wa-btn:hover, .plano-wa-btn:focus-visible { background: #1EBE5D; transform: translateY(-2px); }
 .plano-badge {
   display: inline-block;
   font-size: 0.7rem;
